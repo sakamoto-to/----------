@@ -1,6 +1,6 @@
 # 貴金属価格スクレイピングツール
 
-国内主要3社の貴金属（金・プラチナ・銀・パラジウム）の相場価格を自動収集し、Google スプレッドシートに記録するツールです。Vercel 上にデプロイして使用します。
+国内主要3社の貴金属（金・プラチナ・銀・パラジウム）の相場価格を自動収集し、Google スプレッドシートに記録するツールです。
 
 ## 機能
 
@@ -22,7 +22,7 @@
 
 ```
 ├── api/
-│   └── scrape.js          # Vercel サーバーレス関数（エントリーポイント）
+│   └── scrape.js          # APIエンドポイント（ハンドラ）
 ├── lib/
 │   ├── scrapers/
 │   │   ├── tanaka.js      # 田中貴金属スクレイパー
@@ -31,8 +31,9 @@
 │   └── sheets.js          # Google Sheets 書き込み処理
 ├── public/
 │   └── index.html         # 管理画面UI
-├── .env.local.example     # 環境変数テンプレート
-└── vercel.json            # Vercel ルーティング設定
+├── server.js              # ローカル開発サーバー
+├── .env.local.example     # 環境変数設定ファイル
+└── vercel.json            # Vercel デプロイ設定
 ```
 
 ## セットアップ
@@ -65,21 +66,17 @@ npm install
 
 ### 4. 環境変数の設定
 
-`.env.local.example` をコピーして `.env.local` を作成し、値を埋めます。
-
-```bash
-cp .env.local.example .env.local
-```
+`.env.local.example` を直接編集して値を入力してください。
 
 ```env
 GOOGLE_SERVICE_ACCOUNT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
 GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END PRIVATE KEY-----\n"
-SPREADSHEET_ID=1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SPREADSHEET_ID=https://docs.google.com/spreadsheets/d/1xxx.../edit
 ```
 
-> **注意:** `GOOGLE_PRIVATE_KEY` の改行は `\n` でエスケープして1行に収めてください。
+> `SPREADSHEET_ID` はスプレッドシートのURLをそのまま貼り付けてOKです。
 
-### 5. ローカル開発サーバーの起動
+### 5. 起動
 
 ```bash
 npm run dev
@@ -93,7 +90,7 @@ npm run dev
 vercel --prod
 ```
 
-Vercel のプロジェクト設定（Environment Variables）に、`.env.local` と同じ3つの環境変数を登録してください。
+Vercel のプロジェクト設定（Environment Variables）に `.env.local.example` と同じ3つの環境変数を登録してください。
 
 ## API 仕様
 
@@ -113,8 +110,8 @@ Vercel のプロジェクト設定（Environment Variables）に、`.env.local` 
       "silver":    { "retail": 110,   "buying": 100   },
       "palladium": { "retail": 4500,  "buying": 4300  }
     },
-    "tokuriki": { ... },
-    "material":  { ... }
+    "tokuriki": { "..." : "..." },
+    "material":  { "..." : "..." }
   }
 }
 ```
@@ -124,7 +121,7 @@ Vercel のプロジェクト設定（Environment Variables）に、`.env.local` 
 ```json
 {
   "success": true,
-  "data": { "tanaka": { ... }, "tokuriki": null, "material": { ... } },
+  "data": { "tanaka": { "...": "..." }, "tokuriki": null, "material": { "...": "..." } },
   "errors": { "tokuriki": "connect ETIMEDOUT" }
 }
 ```
@@ -135,7 +132,9 @@ Vercel のプロジェクト設定（Environment Variables）に、`.env.local` 
 
 | 技術 | 用途 |
 |------|------|
-| [Vercel](https://vercel.com/) | サーバーレスホスティング |
+| [Node.js](https://nodejs.org/) | ローカル開発サーバー |
+| [Vercel](https://vercel.com/) | 本番デプロイ |
 | [axios](https://axios-http.com/) | HTTPリクエスト |
 | [cheerio](https://cheerio.js.org/) | HTMLパース |
 | [googleapis](https://github.com/googleapis/google-api-nodejs-client) | Google Sheets API |
+| [dotenv](https://github.com/motdotla/dotenv) | 環境変数ロード |
