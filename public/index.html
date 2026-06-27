@@ -159,6 +159,29 @@
       font-size: 0.82rem;
       color: #888;
     }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 12px; }
+
+      h1 { font-size: 1.2rem; margin-bottom: 16px; }
+
+      .sheet-config { flex-direction: column; align-items: stretch; gap: 8px; }
+
+      #sheetUrlHint { text-align: right; }
+
+      .controls { flex-wrap: wrap; gap: 10px; }
+
+      #fetchBtn, #setupBtn { flex: 1; min-width: 120px; text-align: center; }
+
+      table { font-size: 0.78rem; }
+
+      th, td { padding: 7px 8px; }
+    }
   </style>
 </head>
 <body>
@@ -181,20 +204,22 @@
     <div id="errorMsg" class="error"></div>
 
     <div id="resultArea" style="display:none;">
-      <table>
-        <thead>
-          <tr>
-            <th>金属</th>
-            <th>田中（小売）</th>
-            <th>田中（買取）</th>
-            <th>徳力（小売）</th>
-            <th>徳力（買取）</th>
-            <th>マテリアル（小売）</th>
-            <th>マテリアル（買取）</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>金属</th>
+              <th>田中（小売）</th>
+              <th>田中（買取）</th>
+              <th>徳力（小売）</th>
+              <th>徳力（買取）</th>
+              <th>マテリアル（小売）</th>
+              <th>マテリアル（買取）</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
       <div id="lastUpdated"></div>
     </div>
   </div>
